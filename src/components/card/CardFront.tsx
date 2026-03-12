@@ -117,15 +117,6 @@ export function CardFront({
               <span>{data.website.replace(/^https?:\/\//, "")}</span>
             </div>
           </div>
-
-          <div className="text-right">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-white/48">
-              Tagline
-            </p>
-            <p className="mt-3 font-card text-sm font-medium text-white/68">
-              Premium business card generator
-            </p>
-          </div>
         </div>
       </div>
     </article>
