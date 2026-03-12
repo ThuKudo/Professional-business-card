@@ -58,10 +58,7 @@ export function CardBack({
 
       <div className="relative flex h-full flex-col justify-between">
         <div>
-          <p className="section-kicker text-[0.68rem] font-semibold text-[#9c7a62]">
-            Mặt sau danh thiếp
-          </p>
-          <div className="mt-5 flex items-start justify-between gap-5">
+          <div className="mt-1 flex items-start justify-between gap-5">
             <div className="max-w-[68%]">
               <h2
                 className="name-glow font-serif text-[2.2rem] leading-[1.04] tracking-[-0.03em]"
