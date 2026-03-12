@@ -150,6 +150,10 @@ export async function exportCardSetToPdf(
     renderCardToPng(backNode),
   ]);
 
+  if (!frontDataUrl.startsWith("data:image/") || !backDataUrl.startsWith("data:image/")) {
+    throw new Error("Exported card data is invalid.");
+  }
+
   const pdf = new jsPDF({
     orientation: "landscape",
     unit: "mm",
@@ -157,8 +161,12 @@ export async function exportCardSetToPdf(
     compress: true,
   });
 
+  pdf.setFillColor(255, 255, 255);
+  pdf.rect(0, 0, 90, 55, "F");
   pdf.addImage(frontDataUrl, "PNG", 0, 0, 90, 55, undefined, "FAST");
   pdf.addPage([55, 90], "landscape");
+  pdf.setFillColor(255, 255, 255);
+  pdf.rect(0, 0, 90, 55, "F");
   pdf.addImage(backDataUrl, "PNG", 0, 0, 90, 55, undefined, "FAST");
   pdf.save(`${sanitizeFileName(fileNameBase)}-full-set.pdf`);
 }

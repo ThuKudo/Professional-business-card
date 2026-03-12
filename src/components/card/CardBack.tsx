@@ -58,18 +58,45 @@ export function CardBack({
 
       <div className="relative flex h-full flex-col">
         <div className="flex items-start justify-between gap-4">
-          <div className="max-w-[68%]">
+          <div
+            className="max-w-[68%]"
+            style={{
+              display: "flex",
+              maxWidth: "68%",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "0.75rem",
+            }}
+          >
             <h2
-              className="name-glow font-serif text-[2.05rem] leading-[1.02] tracking-[-0.03em]"
-              style={{ color: theme.textPrimary }}
+              className="name-glow font-serif text-[2.02rem] tracking-[-0.03em]"
+              style={{
+                display: "block",
+                margin: 0,
+                color: theme.textPrimary,
+                fontFamily: "var(--font-serif)",
+                fontSize: "2.02rem",
+                lineHeight: 1.14,
+                letterSpacing: "-0.03em",
+              }}
             >
               {data.fullName}
             </h2>
             <p
-              className="mt-2 inline-flex rounded-full px-3 py-1 text-[0.74rem] font-semibold uppercase tracking-[0.2em]"
+              className="inline-flex rounded-full px-3 py-1 text-[0.74rem] font-semibold uppercase tracking-[0.2em]"
               style={{
+                display: "inline-flex",
+                margin: 0,
+                borderRadius: "999px",
+                padding: "0.36rem 0.8rem",
                 background: theme.accent.accentSoft,
                 color: theme.accent.accentDeep,
+                fontFamily: "var(--font-card)",
+                fontSize: "0.74rem",
+                fontWeight: 700,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                lineHeight: 1,
               }}
             >
               {data.title}
