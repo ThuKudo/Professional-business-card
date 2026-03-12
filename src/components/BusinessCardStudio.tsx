@@ -3,6 +3,8 @@
 import { useMemo, useRef, useState } from "react";
 import { Copy, Download, FileDown, Printer } from "lucide-react";
 import { Toaster, toast } from "sonner";
+import { CardBack } from "@/components/card/CardBack";
+import { CardFront } from "@/components/card/CardFront";
 import { CardPreview } from "@/components/card/CardPreview";
 import { TemplateSwitcher } from "@/components/card/TemplateSwitcher";
 import { BusinessCardForm } from "@/components/forms/BusinessCardForm";
@@ -70,8 +72,8 @@ export function BusinessCardStudio({ initialData }: BusinessCardStudioProps) {
   const [printSafe, setPrintSafe] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
-  const frontCardRef = useRef<HTMLDivElement>(null);
-  const backCardRef = useRef<HTMLDivElement>(null);
+  const exportFrontRef = useRef<HTMLDivElement>(null);
+  const exportBackRef = useRef<HTMLDivElement>(null);
 
   const validationErrors = useMemo(() => validateForm(cardData), [cardData]);
   const activeTheme = getTemplateTheme(templateId, accentId);
@@ -126,11 +128,11 @@ export function BusinessCardStudio({ initialData }: BusinessCardStudioProps) {
   };
 
   const handleExportFront = async () => {
-    if (!frontCardRef.current) return;
+    if (!exportFrontRef.current) return;
 
     setIsExporting(true);
     try {
-      await exportCardSideToPng(frontCardRef.current, cardData.fullName, "front");
+      await exportCardSideToPng(exportFrontRef.current, cardData.fullName, "front");
       toast.success("Đã tải mặt trước.");
     } catch {
       toast.error("Tải mặt trước thất bại.");
@@ -140,11 +142,11 @@ export function BusinessCardStudio({ initialData }: BusinessCardStudioProps) {
   };
 
   const handleExportBack = async () => {
-    if (!backCardRef.current) return;
+    if (!exportBackRef.current) return;
 
     setIsExporting(true);
     try {
-      await exportCardSideToPng(backCardRef.current, cardData.fullName, "back");
+      await exportCardSideToPng(exportBackRef.current, cardData.fullName, "back");
       toast.success("Đã tải mặt sau.");
     } catch {
       toast.error("Tải mặt sau thất bại.");
@@ -154,13 +156,13 @@ export function BusinessCardStudio({ initialData }: BusinessCardStudioProps) {
   };
 
   const handleExportSet = async () => {
-    if (!frontCardRef.current || !backCardRef.current) return;
+    if (!exportFrontRef.current || !exportBackRef.current) return;
 
     setIsExporting(true);
     try {
       await exportCardSetToPdf(
-        frontCardRef.current,
-        backCardRef.current,
+        exportFrontRef.current,
+        exportBackRef.current,
         cardData.fullName,
       );
       toast.success("Đã tải cả bộ danh thiếp dạng PDF.");
@@ -282,10 +284,30 @@ export function BusinessCardStudio({ initialData }: BusinessCardStudioProps) {
             activeSide={activeSide}
             printSafe={printSafe}
             onSideChange={setActiveSide}
-            frontRef={frontCardRef}
-            backRef={backCardRef}
           />
         </section>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed -left-[200vw] top-0 opacity-0"
+      >
+        <div ref={exportFrontRef} className="w-[900px]">
+          <CardFront
+            data={cardData}
+            templateId={templateId}
+            accentId={accentId}
+            printSafe={printSafe}
+          />
+        </div>
+        <div ref={exportBackRef} className="mt-10 w-[900px]">
+          <CardBack
+            data={cardData}
+            templateId={templateId}
+            accentId={accentId}
+            printSafe={printSafe}
+          />
+        </div>
       </div>
 
       <Toaster

@@ -1,6 +1,5 @@
 "use client";
 
-import type { RefObject } from "react";
 import { CardBack } from "@/components/card/CardBack";
 import { CardFront } from "@/components/card/CardFront";
 import { getTemplateTheme } from "@/lib/theme";
@@ -17,8 +16,6 @@ type CardPreviewProps = {
   activeSide: CardSide;
   printSafe: boolean;
   onSideChange: (side: CardSide) => void;
-  frontRef: RefObject<HTMLDivElement | null>;
-  backRef: RefObject<HTMLDivElement | null>;
 };
 
 export function CardPreview({
@@ -28,8 +25,6 @@ export function CardPreview({
   activeSide,
   printSafe,
   onSideChange,
-  frontRef,
-  backRef,
 }: CardPreviewProps) {
   const theme = getTemplateTheme(templateId, accentId);
 
@@ -79,7 +74,7 @@ export function CardPreview({
         <div className="rounded-[2rem] bg-white/28 p-3">
           <div className="soft-grid rounded-[1.8rem] bg-white/36 p-4 sm:p-6">
             <div className="mx-auto max-w-[860px]">
-              <div ref={frontRef} className={activeSide === "front" ? "block" : "hidden"}>
+              <div className={activeSide === "front" ? "block" : "hidden"}>
                 <CardFront
                   data={data}
                   templateId={templateId}
@@ -87,7 +82,7 @@ export function CardPreview({
                   printSafe={printSafe}
                 />
               </div>
-              <div ref={backRef} className={activeSide === "back" ? "block" : "hidden"}>
+              <div className={activeSide === "back" ? "block" : "hidden"}>
                 <CardBack
                   data={data}
                   templateId={templateId}

@@ -12,8 +12,15 @@ function sanitizeFileName(name: string) {
 async function renderCardToPng(node: HTMLElement) {
   await document.fonts.ready;
 
+  const nodeWidth = node.offsetWidth || node.scrollWidth;
+  const nodeHeight = node.offsetHeight || node.scrollHeight;
+
+  if (!nodeWidth || !nodeHeight) {
+    throw new Error("Card node is not measurable for export.");
+  }
+
   const exportWidth = 1260;
-  const exportHeight = Math.round((node.scrollHeight / node.scrollWidth) * exportWidth);
+  const exportHeight = Math.round((nodeHeight / nodeWidth) * exportWidth);
 
   return toPng(node, {
     cacheBust: true,
