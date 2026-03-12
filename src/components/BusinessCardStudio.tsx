@@ -290,7 +290,8 @@ export function BusinessCardStudio({ initialData }: BusinessCardStudioProps) {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed -left-[200vw] top-0 opacity-0"
+        className="pointer-events-none fixed top-0 z-[-1]"
+        style={{ left: "-10000px" }}
       >
         <div ref={exportFrontRef} className="w-[900px]">
           <CardFront

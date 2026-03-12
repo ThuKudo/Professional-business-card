@@ -1,5 +1,6 @@
-import { toPng } from "html-to-image";
+import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { toPng } from "html-to-image";
 
 function sanitizeFileName(name: string) {
   return name
@@ -9,9 +10,43 @@ function sanitizeFileName(name: string) {
     .replaceAll(/(^-|-$)/g, "");
 }
 
-async function renderCardToPng(node: HTMLElement) {
-  await document.fonts.ready;
+async function waitForImages(node: HTMLElement) {
+  const images = Array.from(node.querySelectorAll("img"));
 
+  await Promise.all(
+    images.map(async (image) => {
+      if (image.complete) {
+        return;
+      }
+
+      if (typeof image.decode === "function") {
+        try {
+          await image.decode();
+          return;
+        } catch {
+          return;
+        }
+      }
+
+      await new Promise<void>((resolve) => {
+        image.addEventListener("load", () => resolve(), { once: true });
+        image.addEventListener("error", () => resolve(), { once: true });
+      });
+    }),
+  );
+}
+
+async function waitForStableLayout(node: HTMLElement) {
+  if ("fonts" in document) {
+    await document.fonts.ready;
+  }
+
+  await waitForImages(node);
+  await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+  await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+}
+
+function getNodeSize(node: HTMLElement) {
   const nodeWidth = node.offsetWidth || node.scrollWidth;
   const nodeHeight = node.offsetHeight || node.scrollHeight;
 
@@ -19,19 +54,38 @@ async function renderCardToPng(node: HTMLElement) {
     throw new Error("Card node is not measurable for export.");
   }
 
-  const exportWidth = 1260;
-  const exportHeight = Math.round((nodeHeight / nodeWidth) * exportWidth);
+  return { nodeWidth, nodeHeight };
+}
 
-  return toPng(node, {
-    cacheBust: true,
-    pixelRatio: 2.5,
-    canvasWidth: exportWidth,
-    canvasHeight: exportHeight,
-    style: {
-      width: "900px",
-      margin: "0",
-    },
-  });
+async function renderCardToPng(node: HTMLElement) {
+  await waitForStableLayout(node);
+
+  const { nodeWidth, nodeHeight } = getNodeSize(node);
+
+  try {
+    const canvas = await html2canvas(node, {
+      backgroundColor: null,
+      scale: 3,
+      useCORS: true,
+      logging: false,
+      width: nodeWidth,
+      height: nodeHeight,
+      windowWidth: nodeWidth,
+      windowHeight: nodeHeight,
+      foreignObjectRendering: true,
+    });
+
+    return canvas.toDataURL("image/png");
+  } catch {
+    return toPng(node, {
+      cacheBust: true,
+      pixelRatio: 3,
+      canvasWidth: nodeWidth * 3,
+      canvasHeight: nodeHeight * 3,
+      skipAutoScale: true,
+      backgroundColor: "transparent",
+    });
+  }
 }
 
 export async function exportCardSideToPng(
@@ -43,7 +97,9 @@ export async function exportCardSideToPng(
   const anchor = document.createElement("a");
   anchor.download = `${sanitizeFileName(fileNameBase)}-${side}.png`;
   anchor.href = dataUrl;
+  document.body.append(anchor);
   anchor.click();
+  anchor.remove();
 }
 
 export async function exportCardSetToPdf(
