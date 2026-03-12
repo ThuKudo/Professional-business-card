@@ -45,8 +45,8 @@ export function CardFront({
       />
 
       <div className="relative flex h-full flex-col justify-between">
-        <div className="flex items-start justify-between gap-6">
-          <div className="max-w-[62%]">
+        <div>
+          <div className="max-w-max">
             <div
               className="inline-flex items-center gap-3 rounded-full border px-3 py-2"
               style={{
@@ -84,30 +84,23 @@ export function CardFront({
                 </p>
               </div>
             </div>
-
-            <h1 className="mt-6 font-serif text-[2rem] leading-[1.05] tracking-[-0.03em]">
-              {data.companyName}
-            </h1>
-            <p
-              className="mt-3 h-px w-28"
-              style={{
-                background: `linear-gradient(90deg, ${theme.accent.accent}, transparent)`,
-              }}
-            />
-            <p className="mt-4 max-w-xl font-card text-[0.96rem] leading-7 text-white/72">
-              {data.slogan}
-            </p>
           </div>
 
-          <QRBlock
-            value={data.website}
-            accentColor={theme.accent.accent}
-            foreground={theme.qrForeground}
-            background={theme.chipBackground}
+          <h1 className="mt-6 max-w-none font-serif text-[2.22rem] leading-[1.02] tracking-[-0.04em] text-white [text-wrap:balance]">
+            {data.companyName}
+          </h1>
+          <p
+            className="mt-3 h-px w-32"
+            style={{
+              background: `linear-gradient(90deg, ${theme.accent.accent}, transparent)`,
+            }}
           />
+          <p className="mt-4 max-w-[72%] font-card text-[0.98rem] leading-7 text-white/72">
+            {data.slogan}
+          </p>
         </div>
 
-        <div className="flex items-end justify-between gap-6">
+        <div className="flex items-end justify-between gap-8">
           <div>
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.34em] text-white/48">
               Website
@@ -116,6 +109,15 @@ export function CardFront({
               <Globe className="h-4 w-4" />
               <span>{data.website.replace(/^https?:\/\//, "")}</span>
             </div>
+          </div>
+
+          <div className="shrink-0">
+            <QRBlock
+              value={data.website}
+              accentColor={theme.accent.accent}
+              foreground={theme.qrForeground}
+              background={theme.chipBackground}
+            />
           </div>
         </div>
       </div>
