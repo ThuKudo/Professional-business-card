@@ -1,0 +1,172 @@
+@import "@fontsource/manrope/400.css";
+@import "@fontsource/manrope/500.css";
+@import "@fontsource/manrope/600.css";
+@import "@fontsource/manrope/700.css";
+@import "@fontsource/be-vietnam-pro/400.css";
+@import "@fontsource/be-vietnam-pro/500.css";
+@import "@fontsource/be-vietnam-pro/600.css";
+@import "@fontsource/be-vietnam-pro/700.css";
+@import "@fontsource/noto-serif/500.css";
+@import "@fontsource/noto-serif/600.css";
+@import "@fontsource/noto-serif/700.css";
+@import "tailwindcss";
+
+:root {
+  --background: #f4efe8;
+  --foreground: #1d2430;
+  --font-ui: "Manrope", "Segoe UI", sans-serif;
+  --font-card: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  --font-serif: "Noto Serif", Georgia, serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-ui);
+  --font-card: var(--font-card);
+  --font-serif: var(--font-serif);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(125, 157, 132, 0.18), transparent 25%),
+    radial-gradient(circle at top right, rgba(22, 58, 92, 0.14), transparent 24%),
+    linear-gradient(180deg, #f7f3ef 0%, #f3ede6 100%);
+  color: var(--foreground);
+  font-family: var(--font-ui);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(67, 103, 122, 0.2);
+}
+
+.studio-shell {
+  position: relative;
+  overflow: clip;
+}
+
+.studio-shell::before,
+.studio-shell::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(20px);
+}
+
+.studio-shell::before {
+  top: -4rem;
+  left: -4rem;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(94, 129, 113, 0.14);
+}
+
+.studio-shell::after {
+  right: -4rem;
+  bottom: 8%;
+  width: 20rem;
+  height: 20rem;
+  background: rgba(13, 26, 38, 0.08);
+}
+
+.glass-panel {
+  background: rgba(255, 253, 250, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 28px 80px rgba(56, 61, 68, 0.08);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.card-shadow {
+  box-shadow:
+    0 30px 55px rgba(18, 28, 40, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.card-ratio {
+  aspect-ratio: 90 / 55;
+}
+
+.mockup-frame {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(247, 241, 235, 0.84)),
+    rgba(255, 255, 255, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 35px 90px rgba(40, 45, 50, 0.12);
+}
+
+.print-safe::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border: 1px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 1rem;
+  pointer-events: none;
+}
+
+.name-glow {
+  text-shadow: 0 6px 20px rgba(255, 255, 255, 0.12);
+}
+
+.section-kicker {
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.fade-rise {
+  animation: fade-rise 0.8s ease-out both;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(120, 129, 141, 0.3);
+  border-radius: 999px;
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .studio-shell::before,
+  .studio-shell::after {
+    filter: blur(36px);
+  }
+}
