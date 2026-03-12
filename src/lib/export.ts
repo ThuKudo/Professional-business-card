@@ -57,34 +57,72 @@ function getNodeSize(node: HTMLElement) {
   return { nodeWidth, nodeHeight };
 }
 
-async function renderCardToPng(node: HTMLElement) {
-  await waitForStableLayout(node);
-
+function createExportSandbox(node: HTMLElement) {
   const { nodeWidth, nodeHeight } = getNodeSize(node);
+  const sandbox = document.createElement("div");
+  const clone = node.cloneNode(true) as HTMLElement;
+
+  sandbox.setAttribute("data-export-sandbox", "true");
+  sandbox.style.position = "fixed";
+  sandbox.style.left = "0";
+  sandbox.style.top = "0";
+  sandbox.style.width = `${nodeWidth}px`;
+  sandbox.style.height = `${nodeHeight}px`;
+  sandbox.style.padding = "0";
+  sandbox.style.margin = "0";
+  sandbox.style.opacity = "1";
+  sandbox.style.pointerEvents = "none";
+  sandbox.style.transform = "translate(-200vw, 0)";
+  sandbox.style.isolation = "isolate";
+  sandbox.style.zIndex = "2147483647";
+  sandbox.style.overflow = "visible";
+  sandbox.style.background = "transparent";
+
+  clone.style.width = `${nodeWidth}px`;
+  clone.style.height = `${nodeHeight}px`;
+  clone.style.margin = "0";
+
+  sandbox.append(clone);
+  document.body.append(sandbox);
+
+  return {
+    sandbox,
+    clone,
+    nodeWidth,
+    nodeHeight,
+    cleanup: () => sandbox.remove(),
+  };
+}
+
+async function renderCardToPng(node: HTMLElement) {
+  const sandbox = createExportSandbox(node);
 
   try {
-    const canvas = await html2canvas(node, {
+    await waitForStableLayout(sandbox.clone);
+
+    const canvas = await html2canvas(sandbox.clone, {
       backgroundColor: null,
       scale: 3,
       useCORS: true,
       logging: false,
-      width: nodeWidth,
-      height: nodeHeight,
-      windowWidth: nodeWidth,
-      windowHeight: nodeHeight,
-      foreignObjectRendering: true,
+      width: sandbox.nodeWidth,
+      height: sandbox.nodeHeight,
+      windowWidth: sandbox.nodeWidth,
+      windowHeight: sandbox.nodeHeight,
     });
 
     return canvas.toDataURL("image/png");
   } catch {
-    return toPng(node, {
+    return toPng(sandbox.clone, {
       cacheBust: true,
       pixelRatio: 3,
-      canvasWidth: nodeWidth * 3,
-      canvasHeight: nodeHeight * 3,
+      canvasWidth: sandbox.nodeWidth * 3,
+      canvasHeight: sandbox.nodeHeight * 3,
       skipAutoScale: true,
       backgroundColor: "transparent",
     });
+  } finally {
+    sandbox.cleanup();
   }
 }
 
